@@ -1,9 +1,7 @@
 #
 #
-
 import MySQLdb
 from pexpect import pxssh
-
 def getDBConnection():
 	db=MySQLdb.connect("localhost","root","robin","cloud")
 	return db
@@ -21,10 +19,17 @@ def count_ip(db):
 def executeQuery(db,query):
 	#db=getDBConnection()
 	cursor=getCursor(db)
-	cursor.execute(query)
-	result=cursor.fetchall()
-	db.commit()
-	return result
+	try:
+		cursor.execute(query)
+		result=cursor.fetchall()
+		db.commit()
+
+		return result
+
+
+	except:
+		print("error")
+		db.rollback()
 
 def runScript():
 	pass
@@ -36,9 +41,13 @@ def getHypervisorConnection(db,dom0name):
 		s=pxssh.pxssh()
 		s.login(result[0][1],result[0][2],result[0][3])
 		return s
+		#s.sendline()
+		#s.prompt()
+		#print (s.before)
 	except :
 		print ("pxssh failed on login.")
-    	
+    	#print str(e)
+
 
 
 def createHadoopCluster(db,dom0name ,name, ram, noofslaves, ips) :
@@ -55,36 +64,50 @@ def createHadoopCluster(db,dom0name ,name, ram, noofslaves, ips) :
 
 	command = command+" "+"";
 	print(command)
-	#connection.sendline(command)
-	#connection.prompt()
+	connection.sendline(command)
+	connection.prompt()
 
 
 
 
 
 def main(post):
-	try:
-		db=getDBConnection()
-		ip=[] 
+	db=getDBConnection()
+	ip=[] 
+	if(post['button']=="approve") :
 		noofslaves=post['number_slave']
 		if(count_ip(db)>=noofslaves+1):
 			result=executeQuery(db,"SELECT `ip` FROM `ip_pool` WHERE `status`!='allocated'")			
-			for i in range(noofslaves+1):
+			for i in range(noofslaves+1) :
 				print(result[i][0])
 				ip.append(result[i][0])
-
 			createHadoopCluster(db,post['hypervisor_name'], post['hadoop_name'], post['ram'], noofslaves, ip)
-			
-			query = "UPDATE `hadoop` SET `status`='created' where hadoop_name='%s'"%post['hadoop_name'];
+			query = "UPDATE `hadoop` SET `status`='created' where hadoop_name='%s'" %post['hadoop_name']
 			executeQuery(db,query)
-			
-			sql = "INSERT INTO VMdetails (username,VM_name,cpu,ram,storage,hypervisor_name,ip,doe,iscluster) VALUES (%s,%s,%d,%s,%s,%s,%s,%s,%s)" % post['username'],post['VM_name'],post['cpu'],post['ram'],post['storage'],post['hypervisor_name'],ip[0],str(post['doe']),post['iscluster'];
+			#sql="INSERT INTO VMdetails (username,VM_name) VAlUES ('%s','%s')" % (str(post['username']),str(post['hadoop_name']))
+			#print(sql)
+			#cursor=getCursor(db)
+			#cursor.execute(sql)
+			#cursor.commit()
+			sql = "INSERT INTO VMdetails (username,VM_name,cpu,ram,storage,hypervisor_name,ip,doe,iscluster) VALUES ('%s','%s',%d,'%s','%s','%s','%s','%s','%s')" % (post['username'],post['hadoop_name']+"Master",int(post['cpu']),post['ram'],post['storage'],post['hypervisor_name'],ip[0],str(post['doe']),post['hadoop_name']	)
+			print("fhsudhff"+sql);
+			#cursor=getCursor(db)
+			#cursor.execute(sql)
+			#cursor.commit()
 			executeQuery(db,sql)
-			
-			sql = 
-		db.close()
-	except:
-		db.rollback();
+
+			#Slaves
+			for i in range(1,noofslaves+1):
+				VM_name = post['hadoop_name']+"Slave"+str(i)
+				sql ="INSERT INTO VMdetails (username,VM_name,cpu,ram,storage,hypervisor_name,ip,doe,iscluster) VALUES ('%s','%s',%d,'%s','%s','%s','%s','%s','%s')" % (post['username'],VM_name,int(post['cpu']),post['ram'],post['storage'],post['hypervisor_name'],ip[i],str(post['doe']),post['hadoop_name'])
+				executeQuery(db,sql)
+
+			print("Updating IPs")
+			for i in range(noofslaves+1):
+				sql = "UPDATE ip_pool SET `status`='allocated' WHERE ip='%s'"%(str(ip[i]))
+				executeQuery(db, sql)
+
+	db.close()	
 
 
 if __name__=="__main__":
@@ -96,7 +119,8 @@ if __name__=="__main__":
 		"cpu": 2,
 		"storage": "10GB",
 		"ram": "256MB",
-		"doe":"25/08/1995",
+		"doe":"1995-8-25",
+		"button":"approve" ,
 		"hypervisor_name":"xenserver-trial" 
 		}
 	main(post)

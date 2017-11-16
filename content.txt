@@ -1,0 +1,388 @@
+\documentclass{mnnit}
+
+
+\usepackage{listings}
+\usepackage{graphicx}
+
+
+\begin{document}
+\title{Web Interface for Private Cloud @ MNNIT}
+\author{ \\ Raj Kumar (20145117) \\ 
+    Robin Chawla (20144113) \\
+    Pankaj Kumar Gupta (20144009) \\
+    Prem Jha (20144153) \\
+    Pema Ram (20143095) \\
+    Peddi Nagasai (20134118)\\
+    }
+\supervisor{Dr. A.K. Singh}
+\specialization{Computer Science \& Engineering}
+%\specialization{Computer Science \& Engineering}
+\beforepreface
+\prefacesection{Preface}
+Cloud Computing has emerged as a popular and cost effective method to provide 
+various computing services to a remote user.
+The aim of our project is to create a Web Interface for providing private data cloud at MNNIT. The services include providing Virtual Machines, Hadoop platform and storage to a requesting user. The cloud infrastructure uses \emph{Xenserver} hypervisor.
+
+In this text we discuss what technologies we have used and more specifically why for completion of the project.
+We also present the structure and features of the web interface, it's dependencies, as 
+well as the future developments possible.
+There is also a discussion on some features of the \emph{Xen Project} and 
+how they have been incorporated into our Project.
+\prefacesection{Acknowledgements}
+    It is a great pleasure to thank the giants on whose shoulders I
+    stand. First of all, I would like to thank the Department of Computer Science
+    and engineering and our college for giving us opportunity to work on this project
+    as well as the infrastructure they provided us with.\\
+    I would like to thank our mentor, Dr. A.K. Singh for the moral and creative support 
+    provided by him. I would also like to thank our supervisor Garima Singh for the continuous 
+    help provided during our work.
+\afterpreface
+
+\chapter{Introduction}
+
+The emergence of cloud computing services has led to it's use growing across different fields.  
+Cloud Computing is the practice of using a network of remote servers hosted on the Internet to store, manage, and process data, rather than a local server or a personal computer. Simply put, cloud computing is the delivery of computing 
+services, servers, storage, databases, networking, software, 
+analytics and more, over the Internet (“the cloud”). Since, the burden of maintaining physical server is with the service provider, user is free from  the burden of maintenance. Also, the services can be accessed from anywhere through Internet hence availability and accessibility is improved.
+Companies offering these computing services, cloud providers, typically charge for cloud computing services based on usage, 
+similar to how you are billed for water or electricity at home. Cloud computing is innovating rapidly and there are still a lot of fields to be explored.\\
+\section{Private Cloud @ MNNIT}
+There are various computing need of a particular user, especially in a technical institution, which cannot be satisfied with personal computers. These include short term but high performance computing needs, large and accessible storage, hosting live web servers and many more. Purchasing personal devices for such needs is not cost and resource efficient and also incurs the burden of maintenance.\\
+
+At MNNIT, we have various kinds of computing resources which are not in constant deployment, especially storage resources of computers are rarely used to their full potential. Resource deployment and optimization can be achieved through cloud computing. The resources can be pooled and deployed for providing large storage, and on demand processing capabilities over the web. \\
+
+Maintaining a private cloud has many benefits. The advantage of implementing cloud technology is the speed and flexibility of provision. Resources can be assigned to applications to match changing demand. Also the resources are accessible all over the campus through our network. A requesting user can get virtual computing resources, shared storage anywhere for 24 hours without the burden of maintaining the physical device. Also the requested service is fail-safe and recovers quickly in case of failures.\\
+
+Various complex computing works require a cluster of virtual machines instead of one. A computer cluster consists of a set of loosely or tightly connected computers that work together to achieve a common objective. They are connected via fast networks and require high bandwidth. Such systems can be easily provided by a cloud infrastructure for the period user requires it. Examples of such system include Hadoop Clusters for Big Data Processing.
+ 
+\section{The Xen Project \cite{xenproj}}
+The \emph{Xen Project hypervisor} is an open-source type-1 or \emph{baremetal} 
+hypervisor, which makes it possible to run many instances of
+an operating system or indeed different operating systems in 
+parallel on a single machine (called host). The Xen Project hypervisor
+is the only type-1 hypervisor that is available as open source.\\
+
+It was developed by the Linux Foundation and is supported by Intel.
+The University of Cambridge Computer Laboratory 
+developed the first versions of Xen. The Xen 
+Project community develops and maintains Xen Project as free and
+open-source software, subject to the requirements of the GNU 
+General Public License (GPL), version 2.\\
+
+Xen was basically developed for the x86 architecture. It provides virtualization where it allows multiple operating systems to share common hardware without sacrificing performance. Support for full virtualization was never part of the x86 architectural design. Xen provides \emph{paravirtualization} environment which basically manages CPUs, Memory and I/O Devices \cite{xenproj}.\\
+
+\\
+XenServer is an open source project, a continuation of \emph{Xen Project}, and community managed by 
+Citrix. The project develops open source software for securely 
+running multiple operating systems and applications on a single 
+device, enabling hardware consolidation and automation to reduce 
+costs and simplify IT management of servers and applications.
+
+The Xen hypervisor is preferred because of various features it provides for cloud orchestration such as high availability, workload balancing, VM protection and recovery, etc. 
+
+It is used as the basis for a number of different commercial
+and open source applications, such as: server virtualization, 
+Infrastructure as a Service (IaaS), desktop virtualization, security 
+applications, embedded and hardware appliances. The Xen Project 
+hypervisor is powering the largest clouds in production today. 
+
+\chapter{Proposed Work}
+The aim of the project is to develop an interface between Xenserver hosts
+running on different machines and users, to make access easy and hassle free deployment. The already existing software infrastructure for cloud utilises
+\emph{Xenserver 6.5}. The Web Interface will aim to provide following facilities :
+\begin{itemize}
+ \item[] \textbf{Infrastructure as a Service} : (IaaS) is provided in form of Virtual Machines that can be requested by user according to her prescribed specification in terms of Dynamic Memory Required, Storage Required, and VCPUs to be allocated. These Virtual Machines can be used for various purposes including computing tasks and hosting live web servers for specified time. VMs can provide both computing power as well as storage, hence, are suitable for these requirements. The specification of the Virtual Machine changes according to the purpose. The VMs are fail-safe and easily accessible through remote login and Web based console.  
+ 
+ \item[] \textbf{Hadoop as a Service} : At Big Data Center, there is a frequent requirements of Hadoop clusters for Big data processing. Hence, we provide Hadoop Platform enabled Virtual Machine clusters which are pre-configured for usage. The user can request the number of VMs required in the cluster. The user provides the specification of VMs in the cluster or the standard specifications are used. The VM clusters can used as per requirement and then added back to the resource pool when complete. The resources can be further utilised for other works.
+ 
+ \item[] \textbf{Storage as a Service} : A user can have large storage requirements such that data is easily accessible, available and secure. User can also require shared storage so that a group of users can access and modify data depending upon access privilege. We can allow users to decide a upper limit storage capacity required and allocate the amount to them.
+\end{itemize}
+
+
+\chapter{Infrastructure as a Service (IaaS)}
+
+Infrastructure as a service (IaaS) is a form of cloud computing that provides virtualized computing resources over 
+the internet. 
+Organizations choose IaaS because it is often easier, faster and more cost-efficient to operate a workload without 
+having to buy, manage and support the underlying infrastructure. 
+
+\\
+
+We provide on demand computing resources to users within our college. The Virtual Machines can be accessed via SSH(Secure Shell) over college's private network.
+
+\section{Xenserver and Template Configuration}
+Xenserver version 6.5 is installed on a machine, which is referred as a Xenserver host, and configured with static ip adddress and root account details for the control domain (dom0). Multiple Xenserver hosts can be handled together irrespective of whether they lie in same pool or not. Control domain console can be accessed directy on the machine or through SSH login.
+
+\\
+Our project uses preconfigured templates for deploying Virtual Machines. A template is a pre-installed image of particular OS, namely CentOS, Ubuntu etc. The virtual Machines are created by provisioning a copy of this template with required set of parameters. The parameters include RAM, number of vCPU's, name-label and description of the VM, Para-virtualisation (PV-args) arguments. 
+These templates can be installed on Xenserver using \emph{XenCenter}, which is a Windows based application for managing Xenserver. 
+Various settings need to be configured for proper operation are discussed below.
+
+
+\\
+The Templates can be images of any Linux OS distribution, as long as it supports Xenserver tools. Ubuntu 14.04 and CentOS 6.5 are
+particularly suitable for the used Xenserver Version. The Virtual Machines are to be accessed via SSH Remote Login for convinience.
+Hence, the machines must host an SSH server. For this \emph{openssh-server} package is installed in the templates. A database entry for the 
+template's name is made, which is available for user to choose from.
+
+\\
+A newly created Virtual Machine has to be assigned an IP address for accessing the running ssh server on it. Accessing the console
+of the VM without the SSH login is not feasible. The interface IP configuration is set in static mode for convinent access to user.
+The IP settings are passed to VM as Paravirtualisation arguments(\emph{PV-args}) by Xenserver host every time it is booted. The
+arguments include IP of the VM, Netmask and Default Gateway. The IP is set by a script \emph{initSettings.sh} which parses these
+arguments from a file \emph{\proc\cmdline} and configures the IP. The script is executed in \emph{rc.local} to make it run every time 
+the VM boots.
+\\
+\section{Servicing Virtual Machine Requests}
+The request for a VM can be logged by a user through the page VMrequest on the Web Interface. There are certain parameters the
+user is required to fill. These include:
+\begin{itemize}
+ \item VM name : It is a name for purpose of identifying the VM among others. The uniqueness of the name is verified at runtime by 
+ using an AJAX request (Asynchronous JavaScript And XML). If it is not unique the reuest cannot be made.
+ \item description : It is a short desciption about the purpose for which the VM is being requested.
+ \item OS : It is the set of Templates from which the user can choose
+ \item vCPU : number of Virtual CPUs
+ \item RAM : the total RAM in MB
+ \item Storage : The disk space the VM will be alloted. Minimum 8 GB and currently maximum 20GB. 
+ \item Date of Expiry : The user needs to specify the last date of possible use of this VM. For Notifying the admin to destroy.
+\end{itemize}
+ \begin{figure}
+  \includegraphics[width=\linewidth]{vmrequest.JPG}
+  \caption{VM Requests}
+  \label{fig:vmrequest}
+\end{figure}
+
+\\
+The Request will be stored in database and will be visible to administrator for approval.
+The admin can Reject or Approve the request as well as change some of the specifications before approval. In all the cases a notification 
+will be generated for user and would be mailed to him. The administrator also needs to decide which Xenserver host will host the Virtual
+Machine if multiple Xenserver hosts are present.
+
+\\
+If approved the Virtual Machine is created within 10 to 20 seconds. An IP is allocated to VM from the IP pool. If no IP's
+are available, the operation fails.
+\section{Controlling VM features}
+An VM that has been created is displayed on \emph{VMdetails} page. All basic details are printed about all the VMs and a link for 
+more specific VM details is there.
+
+\\
+The \emph{VM Controls} page provides details of the VM and and some control options like Reboot, Start and Shutdown. 
+The administrator is also provided with and option to destroy the VM completely from the host.
+The request for Start , Shutdown and Reboot are implemented using AJAX and XenAPI which provide quick and efficient operation.
+The page also provides an option for accessing the console of that particular VM. The console can only be accessed for a running
+VM. If the VM is not running the request fails silently. The VM console operation is discussed in next section.
+ \begin{figure}
+  \includegraphics[width=\linewidth]{vmcontrol.JPG}
+  \caption{VM Controls}
+  \label{fig:vmcontrol}
+\end{figure}
+
+\\
+\section{Accessing VM Console} 
+Xenserver provides VNC console of a running Virtual Machine through a network port accessible locally on it's control domain.
+A VNC client applivcation is required to access it on the Control Domain. \emph{noVNC} has been used for that purpose. 
+\emph{noVNC} is a \emph{nodejs} based application which can provide Web based VNC Console access. Since the Control domain
+cannot be burdened with the load of running noVNC, SSH Tunneling is used between the Control Domain and the Webserver Host.
+
+\\
+A constantly running \emph{python3} application, which acts as a middleware, is deployed to service the requests of Console access.
+When the user makes a request for console access, the request is forwarded to middleware in JSON (JavaScript Object Notation) format
+. The Middleware uses an SSH Tunnel to forward the requested Xenserver hosts' port on the local machine and starts the noVNC application
+for that Console. Finally, Web server redirects the user to that port for user to access the console.
+
+\chapter{Provisioning Hadoop Clusters}
+Hadoop is an open-source framework that allows to store and process big data in a distributed environment across clusters 
+of computers using simple programming models. It is designed to scale up from single servers to thousands of machines, 
+each offering local computation and storage. On demand provisioning of Hadoop clusters on cloud increases efficiency and resource 
+utilisation. Large Clusters can be deployed for the time they are needed. When not required the clusters can be 
+removed and resources can be free. 
+\\
+
+\section{Servicing Hadoop Cluster Requests}
+Hadoop Cluster Provisioning is an extension to Infrastructure as a service. The templates used in hadoop clusters
+are preconfigured with hadoop. It uses the basic underlying features of Virtual Machines which are running hadoop.
+
+A user can request a cluster by entering requirements in hadoop request page. User has to enter
+\emph{hadoop name} , which must be unique , Ajax is used to check if name is already present in database or not,
+valid is written if there is no previous entry of this name in database .
+\emph{number of virtual machine} , \textbf{Description} user can describe why it needs hadoop ,
+\emph{vCPU}, \emph{Storage} GB/MB of space required  by user, \emph{RAM}, \emph{Date of expiry} it specifies date 
+till which  user wants this cluster.
+\\
+The requests are sent to a middleware which runs a script on Xenserver Control Domain to create hadoop cluster. 
+Middleware is used because creating the hadoop clusters take large amount time and the webserver may hang if done
+directly using PHP. The templates are configured using default password which can be changed later. A page is also there
+to display the details of clusters and it's VMs.
+ \begin{figure}
+  \includegraphics[width=\linewidth]{hadoopCluster.png}
+  \caption{Hadoop Cluster Details}
+  \label{fig:hadoopcluster}
+\end{figure}
+
+
+
+
+\chapter{Storage as a Service}
+Storage as a service is a utility of cloud computing which provides storage space to the user, that can be accessed over the internet. Cloud storage is often 
+more cost effective. It is easily accessible and crash proof. So, It is more beneficial for the Person or Organization to opt for Cloud Storage.\\
+
+We provide Storage as a Service to users within our college. The space provided 
+can be accessed via SSH or the web app over college's private network. The Web interface access makes it more convenient to use and portable over multiple operating systems. 
+
+\section{Configuring Storage Server}
+For providing storage as a service, we maintain storage servers which service storage requests for a user. Though we have used 
+Xenserver to host a storage server, they can be any Machine with a Linux distribution installed. The storage server must have a
+static IP configuration with \emph{openssh-server} package installed and running. The root password and ip details of this server is 
+entered in the database for the webserver to access it. 
+
+\\
+A dedicated disk partition has been created for storage service in the storage server. The partition is separate from root (/) partition for security as
+it isolates the storage area. The /home directory is shifted to this dedicated partiton and the /etc/fstab file is modified for convenient operation.
+Quota, a software that enforces limits on how much disk space a user can use, is employed to restrict
+the user space. Quota is easy to configure and use. Quota can limit the resources used in terms of memory as well as \emph{Inodes}
+which indirectly limits the number of files. Our aim has been to limit the disk space usage only.
+
+\section{Providing Storage Service}
+The user can request for Storage Service mentioning the amount of storage required to avail the service.
+The user request is sent to the administrator. The admin can accepts or reject the request. If accepted, the user can then
+access their space. The user is notified about the approval/rejection. 
+Administrator can check the details regarding the storage server( i.e. the allocated and free space).
+Apart from this the user can request for resize of the space.
+ \begin{figure}
+  \includegraphics[width=\linewidth]{storagedetails.JPG}
+  \caption{User Storage Details}
+  \label{fig:storagedetails}
+\end{figure}
+\\
+Two methods to access the storage space have been provided. First is through SSH Remote Login. 
+The user's linux account is created on the storage server. The user is given the default login credentials including
+a randomly generated password. This method does not import a limit on file transfer size and is more flexible. This
+method requires user to have basic knowledge of connecting to a SSH server. The Second method provides the file services
+on the web interface itself.
+
+
+\section{Uploading and Downloading Files}
+Uploading or Downloading the files to or from storage server can be done either by using file
+interface on web server or by ssh log-in to storage server. The File Interface on Web Server is easy to use, but imposes
+certain limits on the size of file to be transferred.\\
+
+The web server uses \emph{sshfs} (Secure Shell Filesystem) to mount the users storage repository on a local file. This creates
+a link between webserver and a storage server for secure bidirectional transfer of files. On client request the Web Interface
+deploys AJAX to fetch file information from the webserver. AJAX is also used for transfer the uploaded file to the Webserver.
+The webserver sends the file to storage server securely. The user can navigate and download files by clicking on them. Whether 
+the file is downoaded or openend in browser is determined by the browser settings. The Interface is depicted in \ref{fig:filelist}.
+
+ \begin{figure}
+  \includegraphics[width=\linewidth]{filelist.JPG}
+  \caption{Web File Storage Interface}
+  \label{fig:filelist}
+\end{figure}
+
+
+
+\chapter{Web Interface and Middleware}
+The Application provides an interface between \emph{Xen Management Console} and a service user and the administrator. 
+
+\section{Software and Frameworks used }
+The Software has various pre requisite dependencies for hosting on linux machine. Packages required include  
+\emph{php, php-mysql, libapache2-mod-php, php-xmlrpc, php-cli, composer}. These are basic PHP technologies used for management of web server.
+The technologies used in our web interface include : 
+
+\begin{itemize}
+ \item HTML and Bootstrap for front end Development. Bootstrap is a HTML and CSS framework for 
+ making responsive web pages. JavaScript has also been used for making responsive web pages.
+ \item PHP : Hypertext Preprocessor : for server side scripting and generating web pages. PHP is
+ most widely used and easy to deploy on Apache 2.0 Server. Many PHP frameworks have been used
+ like 
+ \subitem respect/validation : It is library for data type validation of request and response objects received. 
+ \subitem guzzlehttp : It is a PHP HTTP Client library for sending HTTP Requests and processing received response.
+ \item MySQL and PDO (PHP Data Objects) for database management. PDO is secure to SQL injection
+ and can support multiple database management software. 
+ \item Apache2 as a webserver due to it's ease of use and large community support.
+ \item Python3 for maintaining a middleware which handles the mailing function and the VM console operation.
+ \item noVNC nodejs application which renders VNC console of VM on Web Interface.
+ 
+\end{itemize}
+
+\section{Web Features}
+The following features have been implemented in our website : 
+
+\subsection{User Management, Signup and Login : } 
+ Two types of users can login into the system. Users with simple 
+ privileges can request services and use services once approved by Administrator. The Administrator 
+ has privilege to create VM's and approve other user's requests. The Administrator also has 
+ privilege to view the status and configuration of Xenserver hosts. User's can sign up on the system through a 
+ link provided on index page. Users credentials will be verified by admin and their join request will be accepted or rejected. 
+
+ The decision will be notified to the users via e-Mail.\\
+  \begin{figure}
+  \includegraphics[width=\linewidth]{signup.JPG}
+  \caption{User Sign up}
+  \label{fig:signup}
+\end{figure}
+ A Password reset mechanism has also been set up if user forgets his password. The user will be asked to enter his email.
+ If the email is available in our user database, a password reset link will be sent to it. The password reset link is 
+ valid for a certain time only (2 hours).
+  \begin{figure}
+  \includegraphics[width=\linewidth]{userrequests.JPG}
+  \caption{User Management}
+  \label{fig:userrequests}
+\end{figure}
+
+ 
+\subsection{Xen Host Details : } 
+Administrator can view details and configuration of xen host and control domain. Modification of host 
+details is not allowed through this interface. The details include the free memory and CPU configurations of device.
+An interface for Monitoring all the IPs is also there. It displays the free IP as well as alloted IPs with thier VMs.
+
+\subsection{ Notifcations }
+A notification system has been developed for notifying users and administrators about actions taking place. 
+The interface provides facility of Email and Web notifications. All users are notified about the status of their 
+Requests for resources inluding VM, Hadoop Clusters and Storage. Users are also notified about their Signup requests.\\
+
+Custom notifications have been implemented for the administrator. Using this the administrator can send self written 
+notifications for any particular user. New notifications are displayed on notification bar. All notifications can be seen on the nnotifications page. 
+ \begin{figure}
+  \includegraphics[width=\linewidth]{notification.JPG}
+  \caption{Notifications}
+  \label{fig:signup}
+\end{figure}
+
+
+\subsection{Logging}
+The Web Interface Implements Application Logging. The Logging is done using basic php Library for creating logs.
+User Login logs maintain the login details for all users including failed login attempts and signup requests.
+Resource Logs maintain information on all kinds of resources, including VM and storage, when they were requested and 
+when they were approved.
+An error log has also been implemented which stores any kinds of errors that occur.
+
+\section{Python Middleware}
+A Python application has been developed to provide some additional features that PHP is not capable of providing.
+The Middleware application, made using \emph{python3}, is a multithreaded application using socket programming to
+receive and process requests. Currenty the python middle ware provides three kinds of services.
+\\
+
+It provides mail service. The mail contents and request are received from webserver and mail is sent. The mail is implemented
+so as to send mail under a HTTP proxy.
+It runs the noVNC application on request and provides ssh tunneling support for rendering VM console through web. It maintains
+a constant check to verify and deactivate expired Virtual Machines. It also services hadoop cluster requests for further action.
+
+
+\chapter{Conclusion and Future Works}
+The Cloud Services which this setup provides includes Infratsructure as a service, Storage as a service and Hadoop as a service.
+We also provide secure access to VM console through the web along with the access through SSH Remote Login. Other web features like 
+Custom notifications and Mail Notifications have also been implemented.
+
+\\
+There are various additional features that can be added to the this Web Interface. These include more : 
+\begin{itemize}
+ \item Display of resource utilization of Virtual Machines like CPU utilisation, Memory utilisation etc.
+ \item Further information of Xenserver host Control Domain.
+ \item Controlled migration of Virtual Machines from one Xenserver host to another. 
+\end{itemize}
+\bibliographystyle{acm}
+%\addbibresource{references.bib}
+\bibliography{references}
+
+%\addcontentsline{toc}{chapter}{References}
+\end{document}

@@ -45,7 +45,7 @@ if __name__=="__main__":
 	srv_port = 0
 	if(len(sys.argv)<2):
 		print("USAGE: python3 "+sys.argv[0]+" <SERVER_PORT>")
-		print("using default Port : 3695")
+		print("using default Port : 1234")
 		srv_port = 1234
 	else:
 		srv_port = int(sys.argv[1])

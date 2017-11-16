@@ -108,17 +108,17 @@ def main(receiver, message, subject, to_name):
     conn.starttls()
     conn.ehlo()
 
-    r, d = conn.login('241096raj@gmail.com', 'LearnPYTHON@MNNIT')
+    r, d = conn.login('cloud.mnnit@gmail.com', 'mnnitcloud')
 
     print('Login reply: %s' % r)
 
-    sender = '241096raj@gmail.com'
+    sender = 'cloud.mnnit@gmail.com'
     receivers = [receiver]
 
     message_opt = email.mime.multipart.MIMEMultipart()
     message_opt['subject'] = subject
     message_opt['to'] = to_name+"<"+receiver+">"
-    message_opt['from'] = "Raj Kumar <"+sender+">"
+    message_opt['from'] = "Admin MNNIT Cloud <"+sender+">"
     message_opt.attach(email.mime.text.MIMEText(message,'plain'))
     print('Send email.')
     conn.sendmail(sender, receivers, message_opt.as_string())
