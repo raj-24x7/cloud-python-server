@@ -26,7 +26,7 @@ def stopVNC(request_data):
 		if(value['REQUEST_DATA']['REMOTE_HOST']['IP']==request_data['REMOTE_HOST']['IP'] and\
 			value['REQUEST_DATA']['REMOTE_BIND_ADDRESS']['PORT']==request_data['REMOTE_BIND_ADDRESS']['PORT']\
 			):
-			os.killpg(value['VNC_PROCESS'].pid, signal.SIGTERM)
+			os.killpg(value['VNC_PROCESS'].pid, signal.SIGINT)
 			value['TUNNEL'].stop()
 			free_port(int(key))
 			servers.pop(key)

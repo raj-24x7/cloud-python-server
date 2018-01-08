@@ -7,6 +7,7 @@ import mail_notify
 import vnc_client
 import sys
 import queue
+import hadoop_cluster
 
 q = queue.Queue()
 
@@ -39,6 +40,9 @@ def handle_client(clientsocket, client_addr):
 							request['REQUEST_DATA']['MESSAGE'], 
 							request['REQUEST_DATA']['SUBJECT'],
 							request['REQUEST_DATA']['TO_NAME']);
+		
+	if(request['REQUEST_TYPE']=='create_hadoop_cluster'):
+		hadoop_cluster.main(request['REQUEST_DATA'])
 
 		
 if __name__=="__main__":

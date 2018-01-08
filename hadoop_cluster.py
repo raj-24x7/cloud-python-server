@@ -1,7 +1,9 @@
+# Service Creation of Hadoop Clusters
 #
-#
+
 import MySQLdb
 from pexpect import pxssh
+
 def getDBConnection():
 	db=MySQLdb.connect("localhost","root","robin","cloud")
 	return db
@@ -10,29 +12,21 @@ def getCursor(db):
 	cursor=db.cursor()
 	return cursor
 
-
 def count_ip(db):
 	result=executeQuery(db,"SELECT COUNT(*) as count FROM `ip_pool` WHERE `status`!='allocated'")
 	print(result[0][0])
 	return result[0][0]
 
 def executeQuery(db,query):
-	#db=getDBConnection()
 	cursor=getCursor(db)
 	try:
 		cursor.execute(query)
 		result=cursor.fetchall()
 		db.commit()
-
 		return result
-
-
 	except:
 		print("error")
 		db.rollback()
-
-def runScript():
-	pass
 
 def getHypervisorConnection(db,dom0name):
 	result=executeQuery(db,"SELECT * FROM `hypervisor` WHERE name='%s' "% (dom0name))
@@ -47,8 +41,6 @@ def getHypervisorConnection(db,dom0name):
 	except :
 		print ("pxssh failed on login.")
     	#print str(e)
-
-
 
 def createHadoopCluster(db,dom0name ,name, ram, noofslaves, ips) :
 	connection = getHypervisorConnection(db,dom0name);

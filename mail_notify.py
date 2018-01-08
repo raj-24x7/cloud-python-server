@@ -1,6 +1,7 @@
 #python3
 
 # RAJ KUMAR - 20145117
+# Python Script to send mail over HTTP Proxy
 
 import smtplib
 import socket
