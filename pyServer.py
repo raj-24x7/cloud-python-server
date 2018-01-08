@@ -1,3 +1,4 @@
+
 import threading
 import json
 import time
@@ -8,8 +9,18 @@ import vnc_client
 import sys
 import queue
 import hadoop_cluster
+import expirevm
 
 q = queue.Queue()
+
+class TimeValidation(threading.Thread):
+	def __init__(self):
+		threading.Thread.__init__(self)
+
+	def run(self):
+		while True:
+			expirevm.main()
+			time.sleep(300)
 
 class ClientHandler(threading.Thread):
 	def __init__(self, clientsocket, client_addr):
@@ -18,13 +29,25 @@ class ClientHandler(threading.Thread):
 		self.client_addr = client_addr
 
 	def run(self):
-		handle_client(self.clientsocket, self.client_addr)
+		raw_data = clientsocket.recv(1024)
+		request = json.loads(str(raw_data.decode('utf-8')))
+		print("1:"+str(request))
+
+		if(request['REQUEST_TYPE']=='if_alive'):
+			clientsocket.send('alive'.encode('utf-8'))
+			print("hello")	
+			handle_client(self.clientsocket, self.client_addr)
 		q.get(self)			
 
 def handle_client(clientsocket, client_addr):
 	raw_data = clientsocket.recv(1024)
+	if(raw_data == b''):
+		print("Socket Closed.")
+		return
+	print(raw_data.decode('utf-8'))
 	request = json.loads(str(raw_data.decode('utf-8')))
-	print(request)
+	print("2:"+str(request))
+
 	if(request['REQUEST_TYPE']=='get_console'):
 		request_data = request['REQUEST_DATA']
 		port = vnc_client.get_vnc(request_data)
@@ -56,7 +79,8 @@ if __name__=="__main__":
 	srvsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	srvsock.bind(('',int(srv_port)))
 	srvsock.listen(5)
-
+	timeValidator = TimeValidation()
+	timeValidator.start()
 	while True:
 		try:
 			(clientsocket, address) = srvsock.accept()
@@ -67,6 +91,9 @@ if __name__=="__main__":
 		except KeyboardInterrupt:
 			print("Received Stop Signal...")
 			print("Stopping Server...")
+			#timeValidator.stopper.set()
+			#timeValidator.join()
+			vnc_client.stopAllVNCServers()
 			print("waiting for running threads to stop ... ")
 			while not q.empty():
 				thread = q.get()
@@ -74,5 +101,3 @@ if __name__=="__main__":
 				thread.join()
 			break
 	print("Done.")
-
-	

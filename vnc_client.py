@@ -21,15 +21,16 @@ def free_port(port):
 	ports.pop(str(port), None)
 
 def stopVNC(request_data):
-	port = 0
+	server_key = None
 	for  key, value in servers.items():
 		if(value['REQUEST_DATA']['REMOTE_HOST']['IP']==request_data['REMOTE_HOST']['IP'] and\
 			value['REQUEST_DATA']['REMOTE_BIND_ADDRESS']['PORT']==request_data['REMOTE_BIND_ADDRESS']['PORT']\
 			):
-			os.killpg(value['VNC_PROCESS'].pid, signal.SIGINT)
+			subprocess.Popen.kill(value['VNC_PROCESS'])
 			value['TUNNEL'].stop()
 			free_port(int(key))
-			servers.pop(key)
+			server_key = key
+	servers.pop(server_key)
 
 
 
@@ -69,3 +70,10 @@ def get_vnc(request_data):
 		servers[str(vnc_port)] = vnc
 		port = str(vnc_port)
 	return port
+
+def stopAllVNCServers():
+	for  key, value in servers.items():	
+		subprocess.Popen.kill(value['VNC_PROCESS'])
+		value['TUNNEL'].stop()
+		free_port(int(key))
+		server_key = key
