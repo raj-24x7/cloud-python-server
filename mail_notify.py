@@ -11,6 +11,7 @@ import email.message
 import email.header
 import email.mime.multipart
 import email.mime.text
+import configure
 
 def recvline(sock):
     """Receives a line. To read Socket msg"""
@@ -96,12 +97,13 @@ class ProxySMTP(smtplib.SMTP):
         return new_socket
 
 def main(receiver, message, subject, to_name):
-    proxy_host = '172.31.100.25'
-    proxy_port = 3128
-    proxy_username = 'edcguest'
-    proxy_password = 'edcguest'
+    proxy_host = configure.get_proxy_host()
+    proxy_port = configure.get_proxy_port()
+    proxy_username = configure.get_proxy_username()
+    proxy_password = configure.get_proxy_password()
+
     # Both port 25 and 587 work for SMTP
-    conn = ProxySMTP(host='smtp.gmail.com', port=587,
+    conn = ProxySMTP(host=configure.get_mail_host(), port=configure.get_mail_port()
                      p_address=proxy_host, p_port=proxy_port,
                      p_password=proxy_password ,p_username=proxy_username)
 
@@ -109,11 +111,11 @@ def main(receiver, message, subject, to_name):
     conn.starttls()
     conn.ehlo()
 
-    r, d = conn.login('cloud.mnnit@gmail.com', 'mnnitcloud')
+    r, d = conn.login(configure.get_mail_username(), configure.get_mail_password())
 
     print('Login reply: %s' % r)
 
-    sender = 'cloud.mnnit@gmail.com'
+    sender = configure.get_mail_username()
     receivers = [receiver]
 
     message_opt = email.mime.multipart.MIMEMultipart()

@@ -5,7 +5,13 @@ import MySQLdb
 from pexpect import pxssh
 
 def getDBConnection():
-	db=MySQLdb.connect("localhost","root","robin","cloud")
+	
+	db_username = configure.get_db_username()
+	db_password = configure.get_db_password()
+	db_host = configure.get_db_host()
+	db_name = configure.get_db_name()
+
+	db=MySQLdb.connect(db_host,db_username,db_password,db_name)
 	return db
 
 def getCursor(db):
