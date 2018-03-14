@@ -103,7 +103,7 @@ def main(receiver, message, subject, to_name):
     proxy_password = configure.get_proxy_password()
 
     # Both port 25 and 587 work for SMTP
-    conn = ProxySMTP(host=configure.get_mail_host(), port=configure.get_mail_port()
+    conn = ProxySMTP(host=configure.get_mail_host(), port=configure.get_mail_port(),
                      p_address=proxy_host, p_port=proxy_port,
                      p_password=proxy_password ,p_username=proxy_username)
 

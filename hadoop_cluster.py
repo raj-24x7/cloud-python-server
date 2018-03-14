@@ -3,6 +3,7 @@
 
 import MySQLdb
 from pexpect import pxssh
+import configure
 
 def getDBConnection():
 	

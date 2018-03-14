@@ -3,6 +3,7 @@
 import MySQLdb
 import time
 import datetime
+import configure
 
 def main():
 	# Open database connection
